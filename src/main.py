@@ -3,7 +3,7 @@ from geopy.distance import great_circle
 
 from datetime import datetime
 
-api_key = 'AIzaSyCoyLKNRnhMJZCMz7DCkwUnlipIRU88_zU'
+api_key = "INSERT_GOOGLE_API_KEY";
 os.environ["GOOGLE_API_KEY"] = api_key
 
 # url of the text search dictionary
