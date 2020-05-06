@@ -1,10 +1,11 @@
-import googlemaps, requests as rq, json, pandas as pd, numpy as np, geocoder, os, geopy, math
+import googlemaps, requests as rq, json, pandas as pd, numpy as np, geocoder, os, geopy, gmplot.gmplot as gp, math, random, webbrowser
 from geopy.distance import great_circle
 
 from datetime import datetime
 
-api_key = "INSERT_GOOGLE_API_KEY";
+api_key = "AIzaSyCoyLKNRnhMJZCMz7DCkwUnlipIRU88_zU";
 os.environ["GOOGLE_API_KEY"] = api_key
+markerArr = ["yellow", "blue", "green", "red", "cornflowerblue", "orange", "gray"]
 
 # url of the text search dictionary
 url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
@@ -67,7 +68,7 @@ def findMyPlace():
 
     # keep looping up to length of y
 
-    print("My Place: ",y[0]['formatted_address'], " Location:", y[0]['geometry']['location']['lat'], " ", y[0]['geometry']['location']['lng'])
+    # print("My Place: ",y[0]['formatted_address'], " Location:", y[0]['geometry']['location']['lat'], " ", y[0]['geometry']['location']['lng'])
 
     return y[0]['geometry']['location']
 
@@ -77,12 +78,15 @@ def findLocationWhere():
     print("Enter your coordinates:\n")
 
     print("Latitude(0 to 90): ",end="")
-    lat = input()
+    lat = float(input())
 
     print("\nLongitude(0 to 180: ",end="")
-    lng = input()
+    lng = float(input())
 
     print()
+
+    # latitude, longitude and zoom
+    map.marker(lat, lng, color = random.choice(markerArr))
 
     # get an address from query using location parameters,
     # if api key is not set, request will be denied by GoogleCloud Platform
@@ -90,6 +94,7 @@ def findLocationWhere():
 
     print("Locations:")
     for i in query:
+
         print(i)
 
 # find the distance between current location and the city center
@@ -102,6 +107,9 @@ def findDistanceMe2City():
     print()
     
     distanceBetween((myLoc['lat'],myLoc['lng']),(targetLoc['lat'],targetLoc['lng']))
+
+    map.marker(myLoc['lat'],myLoc['lng'], color = random.choice(markerArr))
+    map.marker(targetLoc['lat'],targetLoc['lng'], color = random.choice(markerArr))
 
 # calculate the radius of earth based on the current location
 def findRadius (latitude):
@@ -136,13 +144,12 @@ def options():
     
     # prepare
     print("--Welcome to the CS458 Project--")
-    str = ""
     ask = "y"
     
     # ask and proceed
     while input!="0" and ask=="y":
-        print("Options(1,2,3):\n1) Enter coordinates of a city\n2)Show nearest distance to the city center\n3)Distance to earth center\n")
 
+        print("Options(1,2,3):\n1)Enter coordinates of a city\n2)Show nearest distance to the city center\n3)Distance to earth center\n")
         print("Enter your option: ",end="")
         str = input()
 
@@ -151,7 +158,10 @@ def options():
         if str=="1": findLocationWhere()
         elif str=="2": findDistanceMe2City()
         elif str=="3": findDistanceMe2EarthCenter()
-            
+
+        map.draw("my_map.html")
+        webbrowser.open("my_map.html")
+
         # repeat condition
         print("\nDo you wanna continue?(y/n): ", end="")
         ask = input()
@@ -159,4 +169,8 @@ def options():
         print()
 
 # execute the appliction
+map = gp.GoogleMapPlotter(findMyPlace()['lat'],findMyPlace()['lng'], 3)
+map.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
+map.apikey = api_key
+
 options()
