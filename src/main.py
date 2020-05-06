@@ -54,7 +54,7 @@ def findCityCenter():
 def findMyPlace():
 
     # keywords to filter results to gather from query search
-    query = 'here'
+    query = 'me'
 
     # get a query of google map search using a dictionary url and application secret key for authorization
     r = rq.get(url + 'query=' + query + '&key=' + api_key)
@@ -66,11 +66,9 @@ def findMyPlace():
     # viewport(northeast(lat,lng)), northwest(lat,lng), icon, id, name,
     # photos(height,html_attributions,photo_reference,width), place_id, reference, types, political
 
-    # keep looping up to length of y
+    # Fornat: "My Place: ",y[0]['formatted_address'], " Location:", y[0]['geometry']['location']['lat'], " ", y[0]['geometry']['location']['lng'])
 
-    # print("My Place: ",y[0]['formatted_address'], " Location:", y[0]['geometry']['location']['lat'], " ", y[0]['geometry']['location']['lng'])
-
-    return y[0]['geometry']['location']
+    return geocoder.ipinfo('me').latlng
 
 # find a location with latitude and longitude parameters
 def findLocationWhere():
@@ -106,9 +104,9 @@ def findDistanceMe2City():
     
     print()
     
-    distanceBetween((myLoc['lat'],myLoc['lng']),(targetLoc['lat'],targetLoc['lng']))
+    distanceBetween((myLoc[0],myLoc[1]),(targetLoc['lat'],targetLoc['lng']))
 
-    map.marker(myLoc['lat'],myLoc['lng'], color = random.choice(markerArr))
+    map.marker(myLoc[0],myLoc[1], color = random.choice(markerArr))
     map.marker(targetLoc['lat'],targetLoc['lng'], color = random.choice(markerArr))
 
 # calculate the radius of earth based on the current location
@@ -131,7 +129,7 @@ def findRadius (latitude):
 
 # show the distance current location - earth core
 def findDistanceMe2EarthCenter():
-    myloc = findMyPlace()['lat']
+    myloc = findMyPlace()[0]
     print("The distance to earth center: ",findRadius(myloc))
 
 # show the distance among two locations
@@ -155,12 +153,16 @@ def options():
 
         print()
 
-        if str=="1": findLocationWhere()
-        elif str=="2": findDistanceMe2City()
-        elif str=="3": findDistanceMe2EarthCenter()
-
-        map.draw("my_map.html")
-        webbrowser.open("my_map.html")
+        if str=="1":
+            findLocationWhere()
+            map.draw("my_map.html")
+            webbrowser.open("my_map.html")
+        elif str=="2":
+            findDistanceMe2City()
+            map.draw("my_map.html")
+            webbrowser.open("my_map.html")
+        elif str=="3":
+            findDistanceMe2EarthCenter()
 
         # repeat condition
         print("\nDo you wanna continue?(y/n): ", end="")
@@ -168,9 +170,12 @@ def options():
 
         print()
 
-# execute the appliction
-map = gp.GoogleMapPlotter(findMyPlace()['lat'],findMyPlace()['lng'], 3)
+
+# execute the application
+map = gp.GoogleMapPlotter(findMyPlace()[0],findMyPlace()[1], 3)
 map.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
 map.apikey = api_key
 
 options()
+
+print("Arrivederci!")
