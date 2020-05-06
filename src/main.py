@@ -9,7 +9,6 @@ os.environ["GOOGLE_API_KEY"] = api_key
 # url of the text search dictionary
 url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
 
-
 # give keywords like "places/hotels/best beach in Ankara/Delhi/
 def findLocationWith(keywords):
 
@@ -52,8 +51,6 @@ def findCityCenter():
     return y[0]['geometry']['location']
 
 def findMyPlace():
-    # url of the text search dictionary
-    url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
 
     # keywords to filter results to gather from query search
     query = 'here'
@@ -74,7 +71,7 @@ def findMyPlace():
 
     return y[0]['geometry']['location']
 
-
+# find a location with latitude and longitude parameters
 def findLocationWhere():
 
     print("Enter your coordinates:\n")
@@ -95,13 +92,20 @@ def findLocationWhere():
     for i in query:
         print(i)
 
+# find the distance between current location and the city center
 def findDistanceMe2City():
-    myLoc = findMyPlace() # show your place via the device's location
+    
+    # show your place via the device's location
+    myLoc = findMyPlace() 
     targetLoc = findCityCenter()
+    
     print()
+    
     distanceBetween((myLoc['lat'],myLoc['lng']),(targetLoc['lat'],targetLoc['lng']))
 
+# calculate the radius of earth based on the current location
 def findRadius (latitude):
+    
     # convert latitude to radian
     latitude = math.radians(latitude)
 
@@ -117,18 +121,25 @@ def findRadius (latitude):
 
     return math.sqrt((c+d)/(e+f))
 
+# show the distance current location - earth core
 def findDistanceMe2EarthCenter():
     myloc = findMyPlace()['lat']
     print("The distance to earth center: ",findRadius(myloc))
 
+# show the distance among two locations
 def distanceBetween(loc1, loc2):
 
     print("Distance: ",great_circle(loc1, loc2))
 
+# menu to examine thefeatures
 def options():
+    
+    # prepare
     print("--Welcome to the CS458 Project--")
     str = ""
     ask = "y"
+    
+    # ask and proceed
     while input!="0" and ask=="y":
         print("Options(1,2,3):\n1) Enter coordinates of a city\n2)Show nearest distance to the city center\n3)Distance to earth center\n")
 
@@ -140,9 +151,12 @@ def options():
         if str=="1": findLocationWhere()
         elif str=="2": findDistanceMe2City()
         elif str=="3": findDistanceMe2EarthCenter()
+            
+        # repeat condition
         print("\nDo you wanna continue?(y/n): ", end="")
         ask = input()
 
         print()
 
+# execute the appliction
 options()
