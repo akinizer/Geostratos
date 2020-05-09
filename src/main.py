@@ -75,11 +75,16 @@ def findLocationWhere():
 
     print("Enter your coordinates:\n")
 
-    print("Latitude(0 to 90): ",end="")
+    print("Latitude(-90 to 90): ",end="")
     lat = float(input())
 
-    print("\nLongitude(0 to 180: ",end="")
+    print("\nLongitude(-180 to 180): ",end="")
     lng = float(input())
+
+    if (lat>90 or lat<-90) or (lng>180 or lng<-1180):
+        print("invalid location")
+        return False
+
 
     print()
 
@@ -94,6 +99,8 @@ def findLocationWhere():
     for i in query:
 
         print(i)
+
+    return True
 
 # find the distance between current location and the city center
 def findDistanceMe2City():
@@ -154,9 +161,10 @@ def options():
         print()
 
         if str=="1":
-            findLocationWhere()
-            map.draw("my_map.html")
-            webbrowser.open("my_map.html")
+            flag = findLocationWhere()
+            if flag==True:
+                map.draw("my_map.html")
+                webbrowser.open("my_map.html")
         elif str=="2":
             findDistanceMe2City()
             map.draw("my_map.html")
@@ -171,11 +179,13 @@ def options():
         print()
 
 
-# execute the application
+# google map api prerequisites
 map = gp.GoogleMapPlotter(findMyPlace()[0],findMyPlace()[1], 3)
 map.coloricon = "http://www.googlemapsmarkers.com/v1/%s/"
 map.apikey = api_key
 
+# Show What We Have Got!!!
 options()
 
+# Bye
 print("Arrivederci!")
