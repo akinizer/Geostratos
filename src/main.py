@@ -3,7 +3,7 @@ from geopy.distance import great_circle
 
 from datetime import datetime
 
-api_key = "AIzaSyCoyLKNRnhMJZCMz7DCkwUnlipIRU88_zU";
+api_key = "INSERT_YOUR_API_KEY_HERE";
 os.environ["GOOGLE_API_KEY"] = api_key
 markerArr = ["yellow", "blue", "green", "red", "cornflowerblue", "orange", "gray"]
 
@@ -81,7 +81,7 @@ def findLocationWhere():
     print("\nLongitude(-180 to 180): ",end="")
     lng = float(input())
 
-    if (lat>90 or lat<-90) or (lng>180 or lng<-1180):
+    if (lat>90 or lat<-90) or (lng>180 or lng<-180):
         print("invalid location")
         return False
 
